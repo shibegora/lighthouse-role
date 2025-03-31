@@ -1,22 +1,21 @@
 ---
-- name: Install dependencies
-  become: yes
-  ansible.builtin.apt:
-    pkg:
-      - git
-      - nginx
-    state: present
-    update_cache: yes
-  when: ansible_os_family == 'Debian'
+- name: Include Nginx role
+  include_role:
+    name: nginx
 
-- name: Clone Lighthouse repository
-  ansible.builtin.git:
-    repo: "https://github.com/VKCOM/lighthouse.git"
-    dest: "/var/www/lighthouse"
-    version: master
+- name: Clone Repo
+  git:
+    repo: "https://github.com/VKCOM/lighthouse"
+    dest: "{{ root_dir }}"
+    version: "master"
+  tags:
+    - lighthouse
 
-- name: Configure nginx
-  ansible.builtin.template:
-    src: lighthouse.conf.j2
-    dest: "/etc/nginx/conf.d/lighthouse.conf"
-  notify: restart nginx
+- name: Copy *.conf file for nginx
+  template:
+    src: "{{ role_path }}/templates/default.conf.j2"
+    dest: "/etc/nginx/conf.d/default.conf"
+    mode: '0644'
+  notify: Restart nginx service
+  tags:
+    - lighthouse

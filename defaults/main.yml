@@ -1,4 +1,2 @@
 ---
-lighthouse_domain: "localhost"
-lighthouse_repo: "https://github.com/VKCOM/lighthouse.git"
-lighthouse_install_dir: "/var/www/lighthouse"
+root_dir: /usr/share/lighthouse
